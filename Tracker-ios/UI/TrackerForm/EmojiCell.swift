@@ -32,14 +32,6 @@ final class EmojiCell: UICollectionViewCell {
     func configure(with label: String) {
         emojiLabel.text = label
     }
-    
-    func select() {
-        contentView.backgroundColor = .lightGray
-    }
-    
-    func deselect() {
-        contentView.backgroundColor = .clear
-    }
 }
 
 // MARK: - Layout methods
@@ -59,3 +51,16 @@ private extension EmojiCell {
         ])
     }
 }
+
+// MARK: - SelectionCellProtocol
+
+extension EmojiCell: SelectionCellProtocol {
+    func select() {
+        contentView.backgroundColor = .lightGray
+    }
+    
+    func deselect() {
+        contentView.backgroundColor = .clear
+    }
+}
+
