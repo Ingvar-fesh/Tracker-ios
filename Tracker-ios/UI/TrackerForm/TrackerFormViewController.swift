@@ -1,8 +1,15 @@
+//
+//  TrackerFormViewController.swift
+//  Tracker
+//
+//  Created by Andrey Sysoev on 30.03.2023.
+//
+
 import UIKit
 
 protocol TrackerFormViewControllerDelegate: AnyObject {
     func didTapCancelButton()
-    func didTapConfirmButton(categoryLabel: String, trackerToAdd: Tracker)
+    func didTapConfirmButton(category: TrackerCategory, trackerToAdd: Tracker)
 }
 
 final class TrackerFormViewController: UIViewController {
@@ -97,6 +104,7 @@ final class TrackerFormViewController: UIViewController {
     
     weak var delegate: TrackerFormViewControllerDelegate?
     private let type: AddTrackerViewController.TrackerType
+    private let trackerCategoryStore = TrackerCategoryStore()
     
     private var data: Tracker.Data {
         didSet {
@@ -104,7 +112,7 @@ final class TrackerFormViewController: UIViewController {
         }
     }
     
-    private var category: String? = TrackerCategory.sampleData[0].label {
+    private lazy var category: TrackerCategory? = trackerCategoryStore.categories.randomElement() {
         didSet {
             checkFormValidation()
         }
@@ -215,10 +223,11 @@ final class TrackerFormViewController: UIViewController {
             label: data.label,
             emoji: emoji,
             color: color,
+            completedDaysCount: 0,
             schedule: data.schedule
         )
         
-        delegate?.didTapConfirmButton(categoryLabel: category, trackerToAdd: newTracker)
+        delegate?.didTapConfirmButton(category: category, trackerToAdd: newTracker)
     }
     
     // MARK: - Methods
@@ -256,6 +265,8 @@ private extension TrackerFormViewController {
         case .habit: title = "Новая привычка"
         case .irregularEvent: title = "Новое нерегулярное событие"
         }
+        
+        textField.delegate = self
         
         parametersTableView.dataSource = self
         parametersTableView.delegate = self
@@ -335,6 +346,13 @@ private extension TrackerFormViewController {
     }
 }
 
+extension TrackerFormViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+}
+
 // MARK: - UITableViewDataSource
 
 extension TrackerFormViewController: UITableViewDataSource {
@@ -354,10 +372,10 @@ extension TrackerFormViewController: UITableViewDataSource {
 
         if data.schedule == nil {
             position = .alone
-            value = category
+            value = category?.label
         } else {
             position = indexPath.row == 0 ? .first : .last
-            value = indexPath.row == 0 ? category : scheduleString
+            value = indexPath.row == 0 ? category?.label : scheduleString
         }
 
         listCell.configure(label: parameters[indexPath.row], value: value, position: position)
