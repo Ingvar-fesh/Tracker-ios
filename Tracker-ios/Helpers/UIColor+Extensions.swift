@@ -8,6 +8,8 @@ extension UIColor {
     static let background = UIColor(named: "Background")!
     static let red = UIColor(named: "Red")!
     static let blue = UIColor(named: "Blue")!
+    static let fullBlack = UIColor(named: "Full Black")!
+    static let fullWhite = UIColor(named: "Full White")!
     
     static let selection = [
         UIColor(named: "Color selection 1")!,
@@ -30,3 +32,4 @@ extension UIColor {
         UIColor(named: "Color selection 18")!,
     ]
 }
+
