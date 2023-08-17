@@ -31,6 +31,7 @@ final class RootViewController: UIViewController {
             addController(onboardingViewController)
             return
         }
+        addController(tabBarController)
     }
     
     // MARK: - Methods

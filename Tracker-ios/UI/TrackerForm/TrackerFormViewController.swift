@@ -1,10 +1,3 @@
-//
-//  TrackerFormViewController.swift
-//  Tracker
-//
-//  Created by Andrey Sysoev on 30.03.2023.
-//
-
 import UIKit
 
 protocol TrackerFormViewControllerDelegate: AnyObject {
@@ -112,7 +105,7 @@ final class TrackerFormViewController: UIViewController {
         }
     }
     
-    private lazy var category: TrackerCategory? = trackerCategoryStore.categories.randomElement() {
+    private lazy var category: TrackerCategory? = nil {
         didSet {
             checkFormValidation()
         }
@@ -388,6 +381,11 @@ extension TrackerFormViewController: UITableViewDataSource {
 extension TrackerFormViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.row {
+        case 0:
+            let categoriesViewController = CategoriesViewController(selectedCategory: category)
+            categoriesViewController.delegate = self
+            let navigationController = UINavigationController(rootViewController: categoriesViewController)
+            present(navigationController, animated: true)
         case 1:
             guard let schedule = data.schedule else { return }
             let scheduleViewController = ScheduleViewController(selectedWeekdays: schedule)
@@ -401,6 +399,16 @@ extension TrackerFormViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         ListItem.height
+    }
+}
+
+// MARK: - CategoriesViewControllerDelegate
+
+extension TrackerFormViewController: CategoriesViewControllerDelegate {
+    func didConfirm(_ category: TrackerCategory) {
+        self.category = category
+        parametersTableView.reloadData()
+        dismiss(animated: true)
     }
 }
 
@@ -442,6 +450,8 @@ extension TrackerFormViewController: UICollectionViewDataSource {
         }
     }
 }
+
+// MARK: - UICollectionViewDelegate
 
 extension TrackerFormViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
