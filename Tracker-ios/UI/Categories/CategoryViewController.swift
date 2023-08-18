@@ -14,6 +14,7 @@ final class CategoriesViewController: UIViewController {
         table.separatorStyle = .none
         table.isScrollEnabled = false
         table.allowsMultipleSelection = false
+        table.backgroundColor = .clear
         return table
     }()
     

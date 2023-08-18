@@ -21,6 +21,7 @@
 		F02F4CCD2A85215300E29EB0 /* CategoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F02F4CCC2A85215300E29EB0 /* CategoryViewModel.swift */; };
 		F02F4CCF2A8EB87C00E29EB0 /* NotFoundStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = F02F4CCE2A8EB87C00E29EB0 /* NotFoundStack.swift */; };
 		F02F4CD12A8EBABA00E29EB0 /* CategoryFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F02F4CD02A8EBABA00E29EB0 /* CategoryFormViewController.swift */; };
+		F02F4CD32A8FB21700E29EB0 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F02F4CD22A8FB21700E29EB0 /* UIViewController+Extensions.swift */; };
 		F062D8EF2A58619A00D2E42A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F062D8EE2A58619A00D2E42A /* AppDelegate.swift */; };
 		F062D8F12A58619A00D2E42A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F062D8F02A58619A00D2E42A /* SceneDelegate.swift */; };
 		F062D8F82A58619D00D2E42A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F062D8F72A58619D00D2E42A /* Assets.xcassets */; };
@@ -66,6 +67,7 @@
 		F02F4CCC2A85215300E29EB0 /* CategoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewModel.swift; sourceTree = "<group>"; };
 		F02F4CCE2A8EB87C00E29EB0 /* NotFoundStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotFoundStack.swift; sourceTree = "<group>"; };
 		F02F4CD02A8EBABA00E29EB0 /* CategoryFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryFormViewController.swift; sourceTree = "<group>"; };
+		F02F4CD22A8FB21700E29EB0 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		F062D8EB2A58619A00D2E42A /* Tracker-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tracker-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F062D8EE2A58619A00D2E42A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F062D8F02A58619A00D2E42A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -260,6 +262,7 @@
 				F062D9222A58659300D2E42A /* UICollectionView+Extensions.swift */,
 				F004A2EB2A5D6400004A61DF /* UIColorMarshalling.swift */,
 				F02F4CC32A84F64200E29EB0 /* UserDefaultsBacked.swift */,
+				F02F4CD22A8FB21700E29EB0 /* UIViewController+Extensions.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -403,6 +406,7 @@
 				F004A3312A83E208004A61DF /* RootViewController.swift in Sources */,
 				F062D9362A586CE100D2E42A /* ColorCell.swift in Sources */,
 				F02F4CC22A83E98600E29EB0 /* OnboardingPageViewController.swift in Sources */,
+				F02F4CD32A8FB21700E29EB0 /* UIViewController+Extensions.swift in Sources */,
 				F062D9322A586C8A00D2E42A /* SelectionTitle.swift in Sources */,
 				F062D9032A58629600D2E42A /* Constants.swift in Sources */,
 				F062D91F2A58653900D2E42A /* Int+Extensions.swift in Sources */,

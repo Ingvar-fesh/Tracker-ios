@@ -110,6 +110,8 @@ final class TrackersViewController: UIViewController {
         setupContent()
         setupConstraints()
         
+        hideKeyboardWhenTappedAround()
+        
         trackerRecordStore.delegate = self
         trackerStore.delegate = self
         
@@ -352,6 +354,7 @@ extension TrackersViewController: AddTrackerViewControllerDelegate {
         let trackerFormViewController = TrackerFormViewController(type: type)
         trackerFormViewController.delegate = self
         let navigationController = UINavigationController(rootViewController: trackerFormViewController)
+        navigationController.isModalInPresentation = true
         present(navigationController, animated: true)
     }
 }
@@ -367,6 +370,7 @@ extension TrackersViewController: TrackerFormViewControllerDelegate {
     }
     
     func didTapCancelButton() {
+        collectionView.reloadData()
         dismiss(animated: true)
     }
 }

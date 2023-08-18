@@ -187,6 +187,8 @@ final class TrackerFormViewController: UIViewController {
         setupContent()
         setupConstraints()
         
+        hideKeyboardWhenTappedAround()
+        
         checkFormValidation()
     }
     
