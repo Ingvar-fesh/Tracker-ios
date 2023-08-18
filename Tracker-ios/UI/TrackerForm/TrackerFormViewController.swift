@@ -385,6 +385,7 @@ extension TrackerFormViewController: UITableViewDelegate {
             let categoriesViewController = CategoriesViewController(selectedCategory: category)
             categoriesViewController.delegate = self
             let navigationController = UINavigationController(rootViewController: categoriesViewController)
+            navigationController.isModalInPresentation = true
             present(navigationController, animated: true)
         case 1:
             guard let schedule = data.schedule else { return }
