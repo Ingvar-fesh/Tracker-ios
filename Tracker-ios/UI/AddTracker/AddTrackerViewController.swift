@@ -4,7 +4,6 @@ protocol AddTrackerViewControllerDelegate: AnyObject {
     func didSelectTracker(with: AddTrackerViewController.TrackerType)
 }
 
-
 final class AddTrackerViewController: UIViewController {
     // MARK: - Layout elements
     
@@ -48,7 +47,7 @@ final class AddTrackerViewController: UIViewController {
         "🥦", "🏓", "🥇", "🎸", "🏝", "😪",
     ]
     private let colors = UIColor.selection
-    
+
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -71,7 +70,6 @@ final class AddTrackerViewController: UIViewController {
         delegate?.didSelectTracker(with: .irregularEvent)
     }
 }
-
 
 // MARK: - Layout methods
 

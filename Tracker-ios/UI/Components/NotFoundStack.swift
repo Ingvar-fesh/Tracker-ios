@@ -4,7 +4,6 @@ final class NotFoundStack: UIStackView {
     private let notFoundImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "Star")
         return imageView
     }()
     
@@ -16,10 +15,11 @@ final class NotFoundStack: UIStackView {
         return label
     }()
     
-    convenience init(label: String) {
+    convenience init(label: String, image: UIImage?) {
         self.init()
         
         notFoundLabel.text = label
+        notFoundImageView.image = image
         
         setup()
         addSubviews()
