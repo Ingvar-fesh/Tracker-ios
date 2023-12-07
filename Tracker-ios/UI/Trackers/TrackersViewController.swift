@@ -12,7 +12,7 @@ final class TrackersViewController: UIViewController {
     }()
     
     private lazy var datePicker: UIDatePicker = {
-        let picker = UIDatePicker()
+        let picker = UIDatePicker()https://pictures.s3.yandex.net/resources/4-localized-app_1681324420.png
         picker.translatesAutoresizingMaskIntoConstraints = false
         picker.backgroundColor = .white
         picker.tintColor = .blue
