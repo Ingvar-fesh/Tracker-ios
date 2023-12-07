@@ -1,6 +1,7 @@
-"main.title" = "Trackers";
-"statistics.title" = "Statistics";
-"filters" = "Filters";
-"tabbar.trackers" = "Trackers";
-"tabbar.statistics" = "Statistics";
-"day" = "day";
+"main.title" = "Трекеры";
+"statistics.title" = "Статистика";
+"filters" = "Фильтры";
+"tabbar.trackers" = "Трекеры";
+"tabbar.statistics" = "Статистика";
+"day" = "день";
+"days" = "дней";

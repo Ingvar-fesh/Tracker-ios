@@ -29,7 +29,6 @@
 		F062D9032A58629600D2E42A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F062D9022A58629600D2E42A /* Constants.swift */; };
 		F062D9062A5862E000D2E42A /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F062D9052A5862E000D2E42A /* TabBarController.swift */; };
 		F062D9092A58632800D2E42A /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F062D9082A58632800D2E42A /* StatisticsViewController.swift */; };
-		F062D90C2A58636F00D2E42A /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F062D90B2A58636F00D2E42A /* TrackersViewController.swift */; };
 		F062D90F2A58639300D2E42A /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F062D90E2A58639300D2E42A /* Tracker.swift */; };
 		F062D9112A5863A400D2E42A /* TrackerCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F062D9102A5863A400D2E42A /* TrackerCategory.swift */; };
 		F062D9132A5863E400D2E42A /* TrackerRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = F062D9122A5863E400D2E42A /* TrackerRecord.swift */; };
@@ -50,6 +49,8 @@
 		F062D9362A586CE100D2E42A /* ColorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F062D9352A586CE100D2E42A /* ColorCell.swift */; };
 		F062D9392A586D4700D2E42A /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F062D9382A586D4700D2E42A /* ScheduleViewController.swift */; };
 		F062D93B2A586D7700D2E42A /* WeekdayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F062D93A2A586D7700D2E42A /* WeekdayCell.swift */; };
+		F07FB5D32B21A300007B600A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F07FB5D52B21A300007B600A /* Localizable.strings */; };
+		F07FB5D82B21A414007B600A /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F07FB5D72B21A413007B600A /* TrackersViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -77,7 +78,6 @@
 		F062D9022A58629600D2E42A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		F062D9052A5862E000D2E42A /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		F062D9082A58632800D2E42A /* StatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
-		F062D90B2A58636F00D2E42A /* TrackersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersViewController.swift; sourceTree = "<group>"; };
 		F062D90E2A58639300D2E42A /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		F062D9102A5863A400D2E42A /* TrackerCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategory.swift; sourceTree = "<group>"; };
 		F062D9122A5863E400D2E42A /* TrackerRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecord.swift; sourceTree = "<group>"; };
@@ -98,6 +98,9 @@
 		F062D9352A586CE100D2E42A /* ColorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCell.swift; sourceTree = "<group>"; };
 		F062D9382A586D4700D2E42A /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		F062D93A2A586D7700D2E42A /* WeekdayCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekdayCell.swift; sourceTree = "<group>"; };
+		F07FB5D42B21A300007B600A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F07FB5D62B21A328007B600A /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F07FB5D72B21A413007B600A /* TrackersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackersViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -223,7 +226,7 @@
 		F062D90A2A58635200D2E42A /* Trackers */ = {
 			isa = PBXGroup;
 			children = (
-				F062D90B2A58636F00D2E42A /* TrackersViewController.swift */,
+				F07FB5D72B21A413007B600A /* TrackersViewController.swift */,
 				F062D9252A58682B00D2E42A /* TrackerCell.swift */,
 				F062D9272A5868F600D2E42A /* TrackerCategoryLabel.swift */,
 			);
@@ -273,6 +276,7 @@
 				F062D8F72A58619D00D2E42A /* Assets.xcassets */,
 				F062D8F92A58619D00D2E42A /* LaunchScreen.storyboard */,
 				F062D8FC2A58619D00D2E42A /* Info.plist */,
+				F07FB5D52B21A300007B600A /* Localizable.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -348,6 +352,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = F062D8E22A58619A00D2E42A;
 			productRefGroup = F062D8EC2A58619A00D2E42A /* Products */;
@@ -365,6 +370,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F062D8FB2A58619D00D2E42A /* LaunchScreen.storyboard in Resources */,
+				F07FB5D32B21A300007B600A /* Localizable.strings in Resources */,
 				F062D8F82A58619D00D2E42A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -392,6 +398,7 @@
 				F062D9092A58632800D2E42A /* StatisticsViewController.swift in Sources */,
 				F062D9112A5863A400D2E42A /* TrackerCategory.swift in Sources */,
 				F062D9062A5862E000D2E42A /* TabBarController.swift in Sources */,
+				F07FB5D82B21A414007B600A /* TrackersViewController.swift in Sources */,
 				F062D92E2A586A8E00D2E42A /* TrackerFormViewController.swift in Sources */,
 				F062D8F12A58619A00D2E42A /* SceneDelegate.swift in Sources */,
 				F062D9212A58656100D2E42A /* Date+Extensions.swift in Sources */,
@@ -411,7 +418,6 @@
 				F062D9032A58629600D2E42A /* Constants.swift in Sources */,
 				F062D91F2A58653900D2E42A /* Int+Extensions.swift in Sources */,
 				F004A2EA2A5D5B14004A61DF /* TrackerRecordStore.swift in Sources */,
-				F062D90C2A58636F00D2E42A /* TrackersViewController.swift in Sources */,
 				F062D9342A586CB500D2E42A /* EmojiCell.swift in Sources */,
 				F02F4CCB2A8520B700E29EB0 /* CategoryViewController.swift in Sources */,
 				F062D93B2A586D7700D2E42A /* WeekdayCell.swift in Sources */,
@@ -431,6 +437,15 @@
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
+		F07FB5D52B21A300007B600A /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F07FB5D42B21A300007B600A /* en */,
+				F07FB5D62B21A328007B600A /* ru */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -438,6 +453,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -498,6 +514,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
