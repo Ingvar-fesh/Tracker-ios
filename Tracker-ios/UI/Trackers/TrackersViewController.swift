@@ -6,7 +6,7 @@ final class TrackersViewController: UIViewController {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Трекеры"
+        label.text = NSLocalizedString("main.title", comment: "")
         label.font = UIFont.systemFont(ofSize: 34, weight: .bold)
         return label
     }()
@@ -14,10 +14,8 @@ final class TrackersViewController: UIViewController {
     private lazy var datePicker: UIDatePicker = {
         let picker = UIDatePicker()
         picker.translatesAutoresizingMaskIntoConstraints = false
-        picker.backgroundColor = .white
         picker.tintColor = .blue
         picker.datePickerMode = .date
-        picker.preferredDatePickerStyle = .compact
         picker.locale = Locale(identifier: "ru_RU")
         picker.calendar = Calendar(identifier: .iso8601)
         picker.maximumDate = Date()
@@ -74,7 +72,7 @@ final class TrackersViewController: UIViewController {
     private lazy var filterButton: UIButton = {
         let button = UIButton(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Фильтры", for: .normal)
+        button.setTitle(NSLocalizedString("filters", comment: ""), for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17)
         button.tintColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
         button.layer.cornerRadius = 16
