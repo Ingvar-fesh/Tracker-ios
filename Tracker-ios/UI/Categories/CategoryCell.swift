@@ -5,7 +5,7 @@ import UIKit
      // MARK: - Layout elements
      
      private lazy var listItem = ListItem()
-     private let label: UILabel = {
+     let label: UILabel = {
          let label = UILabel()
          label.translatesAutoresizingMaskIntoConstraints = false
          label.textColor = .black

@@ -12,7 +12,7 @@ final class TrackerRecordStore: NSObject {
     
     private let context: NSManagedObjectContext
     private let trackerStore = TrackerStore()
-    private var completedTrackers: Set<TrackerRecord> = []
+    static var completedTrackers: Set<TrackerRecord> = []
     
     // MARK: - Lifecycle
     
@@ -35,8 +35,8 @@ final class TrackerRecordStore: NSObject {
         trackerRecordCoreData.date = newRecord.date
         trackerRecordCoreData.tracker = trackerCoreData
         try context.save()
-        completedTrackers.insert(newRecord)
-        delegate?.didUpdateRecords(completedTrackers)
+        TrackerRecordStore.completedTrackers.insert(newRecord)
+        delegate?.didUpdateRecords(TrackerRecordStore.completedTrackers)
     }
     
     func remove(_ record: TrackerRecord) throws {
@@ -49,8 +49,15 @@ final class TrackerRecordStore: NSObject {
         guard let recordToRemove = records.first else { return }
         context.delete(recordToRemove)
         try context.save()
-        completedTrackers.remove(record)
-        delegate?.didUpdateRecords(completedTrackers)
+        TrackerRecordStore.completedTrackers.remove(record)
+        delegate?.didUpdateRecords(TrackerRecordStore.completedTrackers)
+    }
+    
+    func loadCompletedTrackers() throws -> [TrackerRecord] {
+        let request = NSFetchRequest<TrackerRecordCoreData>(entityName: "TrackerRecordCoreData")
+        let recordsCoreData = try context.fetch(request)
+        let records = try recordsCoreData.map { try makeTrackerRecord(from: $0) }
+        return records
     }
     
     func loadCompletedTrackers(by date: Date) throws {
@@ -59,8 +66,8 @@ final class TrackerRecordStore: NSObject {
         request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerRecordCoreData.date), date as NSDate)
         let recordsCoreData = try context.fetch(request)
         let records = try recordsCoreData.map { try makeTrackerRecord(from: $0) }
-        completedTrackers = Set(records)
-        delegate?.didUpdateRecords(completedTrackers)
+        TrackerRecordStore.completedTrackers = Set(records)
+        delegate?.didUpdateRecords(TrackerRecordStore.completedTrackers)
     }
     
     private func makeTrackerRecord(from coreData: TrackerRecordCoreData) throws -> TrackerRecord {

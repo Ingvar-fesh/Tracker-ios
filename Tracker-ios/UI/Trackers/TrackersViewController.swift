@@ -79,14 +79,17 @@ final class TrackersViewController: UIViewController {
         button.tintColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
         button.layer.cornerRadius = 16
         button.backgroundColor = .blue
+        button.addTarget(self, action: #selector(didTapFilterButton), for: .touchUpInside)
         return button
     }()
     
     // MARK: - Properties
     
     private var trackerStore: TrackerStoreProtocol
+    private let analyticsService = AnalyticsService()
     private let trackerCategoryStore = TrackerCategoryStore()
     private let trackerRecordStore = TrackerRecordStore()
+    private var selectedFilter: Filter?
     private let params = UICollectionView.GeometricParams(
         cellCount: 2,
         leftInset: 16,
@@ -135,10 +138,25 @@ final class TrackersViewController: UIViewController {
         checkNumberOfTrackers()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        analyticsService.report(event: "open", params: ["screen": "Main"])
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        analyticsService.report(event: "close", params: ["screen": "Main"])
+    }
+    
     // MARK: - Actions
     
     @objc
     private func didTapPlusButton() {
+        analyticsService.report(event: "click", params: [
+            "screen": "Main",
+            "item": "add_track"
+        ])
+        
         let addTrackerViewController = AddTrackerViewController()
         addTrackerViewController.delegate = self
         let navigationController = UINavigationController(rootViewController: addTrackerViewController)
@@ -154,6 +172,12 @@ final class TrackersViewController: UIViewController {
             try trackerRecordStore.loadCompletedTrackers(by: currentDate)
         } catch {}
         collectionView.reloadData()
+    }
+    
+    @objc
+    private func didTapFilterButton() {
+        let filterVC = FilterViewController()
+        present(filterVC, animated: true)
     }
     
     // MARK: - Methods
@@ -188,6 +212,11 @@ final class TrackersViewController: UIViewController {
     
     
     private func edit(_ tracker: Tracker) {
+        analyticsService.report(event: "click", params: [
+            "screen": "Main",
+            "item": "edit"
+        ])
+        
         let type: AddTrackerViewController.TrackerType = tracker.schedule != nil ? .habit : .irregularEvent
         editingTracker = tracker
         presentFormController(with: tracker.data, of: type, formType: .edit)
@@ -270,7 +299,8 @@ private extension TrackersViewController {
 
 extension TrackersViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        trackerStore.numberOfSections
+        filterButton.isHidden = collectionView.isHidden && selectedFilter == nil
+        return trackerStore.numberOfSections
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -496,4 +526,3 @@ extension TrackersViewController: TrackerRecordStoreDelegate {
         completedTrackers = records
     }
 }
-

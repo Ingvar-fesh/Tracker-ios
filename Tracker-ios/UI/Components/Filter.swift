@@ -1,8 +1,8 @@
-//
-//  Filter.swift
-//  Tracker-ios
-//
-//  Created by Игорь Фещенко on 08.12.2023.
-//
+import UIKit
 
-import Foundation
+enum Filter: String, CaseIterable {
+    case all = "Все трекеры"
+    case today = "Трекеры на сегодня"
+    case completed = "Завершенные"
+    case uncompleted = "Незавершенные"
+}
