@@ -6,7 +6,7 @@ final class TrackersViewController: UIViewController {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Трекеры"
+        label.text = NSLocalizedString("main.title", comment: "")
         label.font = UIFont.systemFont(ofSize: 34, weight: .bold)
         return label
     }()
@@ -14,10 +14,8 @@ final class TrackersViewController: UIViewController {
     private lazy var datePicker: UIDatePicker = {
         let picker = UIDatePicker()
         picker.translatesAutoresizingMaskIntoConstraints = false
-        picker.backgroundColor = .white
         picker.tintColor = .blue
         picker.datePickerMode = .date
-        picker.preferredDatePickerStyle = .compact
         picker.locale = Locale(identifier: "ru_RU")
         picker.calendar = Calendar(identifier: .iso8601)
         picker.maximumDate = Date()
@@ -65,47 +63,31 @@ final class TrackersViewController: UIViewController {
         return view
     }()
     
-    private let notFoundImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "Star")
-        return imageView
-    }()
     
-    private let notFoundLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        label.text = "Что будем отслеживать?"
-        label.textColor = .black
-        return label
-    }()
-    
-    private let notFoundStack: UIStackView = {
-        let stack = UIStackView()
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .vertical
-        stack.alignment = .center
-        stack.spacing = 8
-        return stack
-    }()
+    private let notFoundStack = NotFoundStack(
+        label: "Что будем отслеживать?",
+        image: UIImage(named: "Star")
+    )
     
     private lazy var filterButton: UIButton = {
         let button = UIButton(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Фильтры", for: .normal)
+        button.setTitle(NSLocalizedString("filters", comment: ""), for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17)
         button.tintColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
         button.layer.cornerRadius = 16
         button.backgroundColor = .blue
+        button.addTarget(self, action: #selector(didTapFilterButton), for: .touchUpInside)
         return button
     }()
     
     // MARK: - Properties
     
-    private let trackerStore = TrackerStore()
+    private var trackerStore: TrackerStoreProtocol
+    private let analyticsService = AnalyticsService()
     private let trackerCategoryStore = TrackerCategoryStore()
     private let trackerRecordStore = TrackerRecordStore()
+    private var selectedFilter: Filter?
     private let params = UICollectionView.GeometricParams(
         cellCount: 2,
         leftInset: 16,
@@ -123,14 +105,27 @@ final class TrackersViewController: UIViewController {
     }
     private var currentDate = Date.from(date: Date())!
     private var completedTrackers: Set<TrackerRecord> = []
+    private var editingTracker: Tracker?
     
     // MARK: - Lifecycle
+    
+    init(trackerStore: TrackerStoreProtocol) {
+        self.trackerStore = trackerStore
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) is not supported")
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupContent()
         setupConstraints()
+        
+        hideKeyboardWhenTappedAround()
         
         trackerRecordStore.delegate = self
         trackerStore.delegate = self
@@ -141,10 +136,25 @@ final class TrackersViewController: UIViewController {
         checkNumberOfTrackers()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        analyticsService.report(event: "open", params: ["screen": "Main"])
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        analyticsService.report(event: "close", params: ["screen": "Main"])
+    }
+    
     // MARK: - Actions
     
     @objc
     private func didTapPlusButton() {
+        analyticsService.report(event: "click", params: [
+            "screen": "Main",
+            "item": "add_track"
+        ])
+        
         let addTrackerViewController = AddTrackerViewController()
         addTrackerViewController.delegate = self
         let navigationController = UINavigationController(rootViewController: addTrackerViewController)
@@ -162,6 +172,12 @@ final class TrackersViewController: UIViewController {
         collectionView.reloadData()
     }
     
+    @objc
+    private func didTapFilterButton() {
+        let filterVC = FilterViewController()
+        present(filterVC, animated: true)
+    }
+    
     // MARK: - Methods
     
     private func checkNumberOfTrackers() {
@@ -172,6 +188,58 @@ final class TrackersViewController: UIViewController {
             notFoundStack.isHidden = true
             filterButton.isHidden = false
         }
+    }
+    
+    
+    private func presentFormController(
+        with data: Tracker.Data? = nil,
+        of trackerType: AddTrackerViewController.TrackerType,
+        formType: TrackerFormViewController.FormType
+    ) {
+        let trackerFormViewController = TrackerFormViewController(
+            formType: formType,
+            trackerType: trackerType,
+            data: data
+        )
+        trackerFormViewController.delegate = self
+        let navigationController = UINavigationController(rootViewController: trackerFormViewController)
+        navigationController.isModalInPresentation = true
+        present(navigationController, animated: true)
+    }
+    
+    
+    
+    private func edit(_ tracker: Tracker) {
+        analyticsService.report(event: "click", params: [
+            "screen": "Main",
+            "item": "edit"
+        ])
+        
+        let type: AddTrackerViewController.TrackerType = tracker.schedule != nil ? .habit : .irregularEvent
+        editingTracker = tracker
+        presentFormController(with: tracker.data, of: type, formType: .edit)
+    }
+    
+    private func delete(_ tracker: Tracker) {
+        let alert = UIAlertController(
+            title: nil,
+            message: "Уверены что хотите удалить трекер?",
+            preferredStyle: .actionSheet
+        )
+        let cancelAction = UIAlertAction(title: "Отменить", style: .cancel)
+        let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { [weak self] _ in
+            guard let self else { return }
+            try? self.trackerStore.deleteTracker(tracker)
+        }
+        
+        alert.addAction(deleteAction)
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true)
+    }
+    
+    private func togglePin(_ tracker: Tracker) {
+        try? trackerStore.togglePin(for: tracker)
     }
 }
 
@@ -187,9 +255,6 @@ private extension TrackersViewController {
         view.addSubview(collectionView)
         view.addSubview(notFoundStack)
         view.addSubview(filterButton)
-        
-        notFoundStack.addArrangedSubview(notFoundImageView)
-        notFoundStack.addArrangedSubview(notFoundLabel)
         
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -232,7 +297,8 @@ private extension TrackersViewController {
 
 extension TrackersViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        trackerStore.numberOfSections
+        filterButton.isHidden = collectionView.isHidden && selectedFilter == nil
+        return trackerStore.numberOfSections
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -328,6 +394,32 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
             verticalFittingPriority: .fittingSizeLevel
         )
     }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        contextMenuConfigurationForItemsAt indexPaths: [IndexPath],
+                        point: CGPoint) -> UIContextMenuConfiguration? {
+        guard indexPaths.count > 0 else {
+            return nil
+        }
+        
+        let indexPath = indexPaths[0]
+        guard
+            let tracker = trackerStore.tracker(at: indexPath) else { return nil }
+        
+        return UIContextMenuConfiguration(actionProvider:  { actions in
+            UIMenu(children: [
+                UIAction(title: tracker.isPinned ? "Открепить" : "Закрепить") { [weak self] _ in
+                    self?.togglePin(tracker)
+                },
+                UIAction(title: "Редактировать") { [weak self] _ in
+                    self?.edit(tracker)
+                },
+                UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
+                    self?.delete(tracker)
+                }
+            ])
+        })
+    }
 }
 
 // MARK: - UISearchBarDelegate
@@ -374,9 +466,14 @@ extension TrackersViewController: TrackerCellDelegate {
 extension TrackersViewController: AddTrackerViewControllerDelegate {
     func didSelectTracker(with type: AddTrackerViewController.TrackerType) {
         dismiss(animated: true)
-        let trackerFormViewController = TrackerFormViewController(type: type)
+        let trackerFormViewController = TrackerFormViewController(
+            formType: .add,
+            trackerType: type,
+            data: nil
+        )
         trackerFormViewController.delegate = self
         let navigationController = UINavigationController(rootViewController: trackerFormViewController)
+        navigationController.isModalInPresentation = true
         present(navigationController, animated: true)
     }
 }
@@ -384,6 +481,20 @@ extension TrackersViewController: AddTrackerViewControllerDelegate {
 // MARK: - TrackerFormViewControllerDelegate
 
 extension TrackersViewController: TrackerFormViewControllerDelegate {
+    func didUpdateTracker(with data: Tracker.Data) {
+        guard let editingTracker else { return }
+        dismiss(animated: true)
+        try? trackerStore.updateTracker(editingTracker, with: data)
+        self.editingTracker = nil
+    }
+    
+    
+    func didAddTracker(category: TrackerCategory, trackerToAdd: Tracker) {
+        dismiss(animated: true)
+        try? trackerStore.addTracker(trackerToAdd, with: category)
+    }
+        
+    
     func didTapConfirmButton(category: TrackerCategory, trackerToAdd: Tracker) {
         dismiss(animated: true)
         do {
@@ -392,6 +503,7 @@ extension TrackersViewController: TrackerFormViewControllerDelegate {
     }
     
     func didTapCancelButton() {
+        collectionView.reloadData()
         dismiss(animated: true)
     }
 }
@@ -412,4 +524,3 @@ extension TrackersViewController: TrackerRecordStoreDelegate {
         completedTrackers = records
     }
 }
-

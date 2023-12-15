@@ -8,11 +8,24 @@ protocol TrackerStoreDelegate: AnyObject {
 protocol TrackerStoreProtocol {
     var numberOfTrackers: Int { get }
     var numberOfSections: Int { get }
+    var delegate: TrackerStoreDelegate? { get set}
+    
+    func loadFilteredTrackers(date: Date, searchString: String) throws
     func numberOfRowsInSection(_ section: Int) -> Int
     func headerLabelInSection(_ section: Int) -> String?
     func tracker(at indexPath: IndexPath) -> Tracker?
     func addTracker(_ tracker: Tracker, with category: TrackerCategory) throws
+    func updateTracker(_ tracker: Tracker, with data: Tracker.Data) throws
+    func deleteTracker(_ tracker: Tracker) throws
+    func togglePin(for tracker: Tracker) throws
 }
+
+extension TrackerStore {
+    enum StoreError: Error {
+        case decodeError, fetchTrackerError, deleteError, pinError
+    }
+}
+
 
 final class TrackerStore: NSObject {
     // MARK: - Properties
@@ -61,6 +74,8 @@ final class TrackerStore: NSObject {
             let label = coreData.label,
             let emoji = coreData.emoji,
             let colorHEX = coreData.colorHEX,
+            let categoryCoreData = coreData.category,
+            let category = try? trackerCategoryStore.makeCategory(from: categoryCoreData),
             let completedDaysCount = coreData.records
         else { throw StoreError.decodeError }
         let color = uiColorMarshalling.color(from: colorHEX)
@@ -71,8 +86,10 @@ final class TrackerStore: NSObject {
             label: label,
             emoji: emoji,
             color: color,
+            category: category,
             completedDaysCount: completedDaysCount.count,
-            schedule: schedule
+            schedule: schedule,
+            isPinned: coreData.isPinned
         )
     }
     
@@ -82,7 +99,10 @@ final class TrackerStore: NSObject {
             #keyPath(TrackerCoreData.trackerId), id.uuidString
         )
         try fetchedResultsController.performFetch()
-        return fetchedResultsController.fetchedObjects?.first
+        guard let tracker = fetchedResultsController.fetchedObjects?.first else { throw StoreError.fetchTrackerError }
+        fetchedResultsController.fetchRequest.predicate = nil
+        try fetchedResultsController.performFetch()
+        return tracker
     }
     
     func loadFilteredTrackers(date: Date, searchString: String) throws {
@@ -122,11 +142,6 @@ final class TrackerStore: NSObject {
     }
 }
 
-extension TrackerStore {
-    enum StoreError: Error {
-        case decodeError
-    }
-}
 
 // MARK: - TrackerStoreProtocol
 
@@ -168,6 +183,36 @@ extension TrackerStore: TrackerStoreProtocol {
         trackerCoreData.colorHEX = uiColorMarshalling.makeHEX(from: tracker.color)
         trackerCoreData.schedule = Weekday.code(tracker.schedule)
         trackerCoreData.category = categoryCoreData
+        trackerCoreData.isPinned = tracker.isPinned
+        try context.save()
+    }
+    
+    func updateTracker(_ tracker: Tracker, with data: Tracker.Data) throws {
+        guard
+            let emoji = data.emoji,
+            let color = data.color,
+            let category = data.category
+        else { return }
+        
+        let trackerCoreData = try getTrackerCoreData(by: tracker.id)
+        let categoryCoreData = try trackerCategoryStore.categoryCoreData(with: category.id)
+        trackerCoreData?.label = data.label
+        trackerCoreData?.emoji = emoji
+        trackerCoreData?.colorHEX = uiColorMarshalling.makeHEX(from: color)
+        trackerCoreData?.schedule = Weekday.code(data.schedule)
+        trackerCoreData?.category = categoryCoreData
+        try context.save()
+    }
+    
+    func deleteTracker(_ tracker: Tracker) throws {
+        guard let trackerToDelete = try getTrackerCoreData(by: tracker.id) else { throw StoreError.deleteError }
+        context.delete(trackerToDelete)
+        try context.save()
+    }
+    
+    func togglePin(for tracker: Tracker) throws {
+        guard let trackerToToggle = try getTrackerCoreData(by: tracker.id) else { throw StoreError.pinError }
+        trackerToToggle.isPinned.toggle()
         try context.save()
     }
 }
